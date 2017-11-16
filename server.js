@@ -1,27 +1,38 @@
-const express = require("express")
-const bodyParser = require("body-parser")
-const session = require("express-session")
-const passport = require("passport")
-const authRoutes = require("./routes/auth")
-const postsRoutes = require("./routes/posts")
-const db = require("./db")
-require("./passport")
+const express = require('express')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const passport = require('passport')
+const authRoutes = require('./routes/auth')
+const postsRoutes = require('./routes/posts')
+// const db = require('./db')
+require('./passport')
 
-express()
-  .set("view engine", "hjs")
-  .use(bodyParser.json())
-  .use(bodyParser.urlencoded({extended: false}))
-  .use(session({ secret: "i love dogs", resave: false, saveUninitialized: false }))
-  .use(passport.initialize())
-  .use(passport.session())
-  .use(authRoutes)
-  .use(postsRoutes)
-  .get("/", (req, res, next) => {
-    res.send({
-      session: req.session,
-      user: req.user,
-      authenticated: req.isAuthenticated(),
-    })
+const port = process.env.PORT || 3000
+
+const app = express()
+
+app.set('view engine', 'ejs')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'oauth is cool',
+  resave: false,
+  saveUninitialized: false,
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(authRoutes)
+app.use(postsRoutes)
+
+app.get('/', (req, res, next) => {
+  res.send({
+    session: req.session,
+    user: req.user,
+    authenticated: req.isAuthenticated(),
   })
-  .listen(3000)
+})
 
+app.listen(3000)

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const bcrypt = require("bcrypt-nodejs")
 const db = require("./db")
 const passport = require("passport")
