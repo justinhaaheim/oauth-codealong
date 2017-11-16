@@ -8,31 +8,49 @@ const store = {
     { id: 2, name: "Judy"},
     { id: 3, name: "NeEddra"}
   ],
-  contactsIdCounter: 4,
+  contactsIdNext: 4,
 }
 
+// oneOrNone
+function getUserById(id) {
+  store.users.forEach((user) => {
+    if (user.id === id) {
+      return Promise.resolve(user)
+    }
+  })
+  return Promise.resolve(null)
+}
+
+// oneOrNone
 function getOauthUser(provider, providerId) {
   store.users.forEach((user) => {
     if (user.oauth_provider === provider && user.oauth_id === providerId) {
-      return user
+      return Promise.resolve(user)
     }
   })
-  return []
+  return Promise.resolve(null)
 }
 
+// oneOrNone, RETURNING *
+// NOTE: does NOT check if the user is already in the db
 function createOauthUser(user) {
-  store.users.push({
-    id: store.users.userIdNext,
+  const newUserId = store.userIdNext
+  const newUser = {
+    id: newUserId,
     email: null,
     password: null,
     name: null,
     oauth_provider: user.oauth_provider,
     oauth_id: user.oauth_id,
-  })
-  store.users.userIdNext += 1
+  }
+  store.users.push(newUser)
+  store.userIdNext += 1
+  console.log('[DEBUG] DB store: ', store)
+  return Promise.resolve(newUser)
 }
 
 module.exports = {
+  getUserById,
   getOauthUser,
   createOauthUser,
 };
