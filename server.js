@@ -4,7 +4,6 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 const authRoutes = require('./routes/auth')
-const postsRoutes = require('./routes/posts')
 // const db = require('./db')
 require('./passport')
 require('hjs')
@@ -19,7 +18,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'oauth is cool',
+  secret: 'oauth is cool',
   resave: false,
   saveUninitialized: false,
 }))
@@ -28,7 +27,17 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(authRoutes)
-app.use(postsRoutes)
+
+function loginRequired(req, res, next) {
+  if (!req.isAuthenticated()) {
+    return res.status(403).render('403')
+  }
+  next()
+}
+
+app.get('/success', loginRequired, (req, res) => {
+  res.render('success')
+})
 
 // Useful for debugging the session
 app.get('/', (req, res, next) => {

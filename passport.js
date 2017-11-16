@@ -14,7 +14,6 @@ passport.use(new GitHubStrategy({
     callbackURL: "http://localhost:3000/auth/github/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('GitHub Profile: ', profile)
     db.getOauthUser('github', profile.username)
       .then((user) => {
         if (user) {
@@ -39,8 +38,6 @@ passport.use(new GitHubStrategy({
 
 
 passport.serializeUser(function(user, done) {
-  console.log("serialize - user object:", user)
-  console.log('')
   done(null, user.id)
 })
 

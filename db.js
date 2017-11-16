@@ -13,12 +13,13 @@ const store = {
 
 // oneOrNone
 function getUserById(id) {
+  let result = null
   store.users.forEach((user) => {
     if (user.id === id) {
-      return Promise.resolve(user)
+      result = Promise.resolve(user)
     }
   })
-  return Promise.resolve(null)
+  return Promise.resolve(result)
 }
 
 // oneOrNone
