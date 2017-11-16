@@ -2,12 +2,9 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const passport = require('passport')
+const passport = require('./passport')
 const authRoutes = require('./routes/auth')
-// const db = require('./db')
-require('./passport')
 require('hjs')
-// require('ejs')
 
 const port = process.env.PORT || 3000
 
@@ -40,7 +37,7 @@ app.get('/success', loginRequired, (req, res) => {
 })
 
 // Useful for debugging the session
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
   res.send({
     session: req.session,
     user: req.user,

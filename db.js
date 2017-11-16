@@ -1,13 +1,16 @@
 const store = {
   users: [
-    {id: 1, email: "test@test.com", password: "123", name: "User1", oauth_provider: null, oauth_id: null}
+    {
+      id: 1,
+      email: 'test@test.com',
+      password: '123',
+      name: 'User1',
+      oauth_provider: null,
+      oauth_id: null,
+    },
   ],
   userIdNext: 2,
-  contacts: [
-    { id: 1, name: "Justin" },
-    { id: 2, name: "Judy"},
-    { id: 3, name: "NeEddra"}
-  ],
+  contacts: [{ id: 1, name: 'Justin' }, { id: 2, name: 'Judy' }, { id: 3, name: 'NeEddra' }],
   contactsIdNext: 4,
 }
 
@@ -16,7 +19,7 @@ function getUserById(id) {
   let result = null
   store.users.forEach((user) => {
     if (user.id === id) {
-      result = Promise.resolve(user)
+      result = user
     }
   })
   return Promise.resolve(result)
@@ -24,12 +27,13 @@ function getUserById(id) {
 
 // oneOrNone
 function getOauthUser(provider, providerId) {
+  let result = null
   store.users.forEach((user) => {
     if (user.oauth_provider === provider && user.oauth_id === providerId) {
-      return Promise.resolve(user)
+      result = user
     }
   })
-  return Promise.resolve(null)
+  return Promise.resolve(result)
 }
 
 // oneOrNone, RETURNING *
@@ -54,4 +58,4 @@ module.exports = {
   getUserById,
   getOauthUser,
   createOauthUser,
-};
+}
